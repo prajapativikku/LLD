@@ -15,7 +15,7 @@ namespace LogUtil
     };
 
     void startLogger(string &filePath);
-    void Log(Type t, string &msg);
+    void Log(Type t, const string &msg);
 
     //singleTon Class
     class MyLog 
@@ -27,13 +27,14 @@ namespace LogUtil
 
             static MyLog* myLog;
             ofstream file;
-            mutex mut;
+            static mutex mut;
             const string level[4] = {"Fatal", "Error", "Info", "Warning"};
 
         public:
             static MyLog* getInstance();
-            void addMsg(Type, string);
-            void startLogging(string);
+            void addMsg(Type, const string&);
+            void startLogging(string&);
+            ~MyLog();
     };
 
 }
