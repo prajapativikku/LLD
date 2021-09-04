@@ -1,4 +1,0 @@
-Warning: starting logger
-Fatal: Got Crashed
-Error: Got Error
-Warning: Stopping logger
