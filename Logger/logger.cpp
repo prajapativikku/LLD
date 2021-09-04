@@ -2,22 +2,28 @@
 using namespace LogUtil;
 
 MyLog* MyLog::myLog = NULL;
+mutex MyLog::mut;
 
-void startLogger(string &path)
+void LogUtil::startLogger(string &path)
 {
     MyLog *mylog = MyLog::getInstance();
     mylog->startLogging(path);
 }
 
-void Log(Type t, const string &msg)
+void LogUtil::Log(Type t, const string &msg)
 {
     MyLog *mylog = MyLog::getInstance();
     mylog->addMsg(t, msg);
 }
 
+void LogUtil::finishLogger()
+{
+    MyLog *mylog = MyLog::getInstance();
+    delete mylog;
+}
 MyLog* MyLog::getInstance() {
     lock_guard<mutex> lg(mut);
-    if(myLog == NULL) 
+    if(myLog == NULL)
         myLog = new MyLog();
     return myLog;
 }
@@ -37,7 +43,5 @@ void MyLog::startLogging(string &path)
 MyLog::~MyLog()
 {
     addMsg(Type::Info, "Stopping logger");
-    delete myLog;
-    myLog = NULL;
 }
 

@@ -1,30 +1,35 @@
 #include"logger.h"
-namespace LogUtil
-{
+using namespace LogUtil;
 
 MyLog* MyLog::myLog = NULL;
+mutex MyLog::mut;
 
-void startLogger(string &path)
+void LogUtil::startLogger(string &path)
 {
     MyLog *mylog = MyLog::getInstance();
     mylog->startLogging(path);
 }
 
-void Log(Type t, const string &msg)
+void LogUtil::Log(Type t, const string &msg)
 {
     MyLog *mylog = MyLog::getInstance();
     mylog->addMsg(t, msg);
 }
 
+void LogUtil::finishLogger()
+{
+    MyLog *mylog = MyLog::getInstance();
+    delete mylog;
+}
 MyLog* MyLog::getInstance() {
-    //lock_guard<mutex> lg(LogUtil::MyLog::mut);
-    if(myLog == NULL) 
+    lock_guard<mutex> lg(mut);
+    if(myLog == NULL)
         myLog = new MyLog();
     return myLog;
 }
 void MyLog::addMsg(Type t, const string &msg)
 {
-    //lock_guard<mutex> lg(MyLog::mut);
+    lock_guard<mutex> lg(mut);
     if(file.is_open())
     {
         file<<level[t]<<": "<<msg<<endl;
@@ -40,4 +45,3 @@ MyLog::~MyLog()
     addMsg(Type::Info, "Stopping logger");
 }
 
-}
