@@ -1,0 +1,3 @@
+Warning: starting logger
+Fatal: Got Crashed
+Error: Got Error
